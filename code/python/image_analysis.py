@@ -106,6 +106,16 @@ class Analysis:
                    label="Nominal solar diameter ≈ 31′")
         ax.legend(loc='upper right', fontsize=10)
 
+        # ── Add sunrise & sunset vertical lines ─────────────
+        sunrise_hour = 6 + 50/60      # 6:50 → ~6.833
+        sunset_hour  = 20 + 13/60      # 20:13 → ~20.217
+
+        ax.axvline(x=sunrise_hour, color='gold', linestyle='--', linewidth=2.2,
+                label='Sunrise (approx. 06:50)', alpha=0.9)
+
+        ax.axvline(x=sunset_hour, color='darkorange', linestyle='--', linewidth=2.2,
+                label='Sunset (approx. 20:13)', alpha=0.9)
+
         plt.tight_layout()
         plt.show()
         logging.info("plot: End")
