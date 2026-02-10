@@ -92,10 +92,10 @@ class Analysis:
         
         # Format plot
         ax.set_title('Measured solar diameter over time')
-        ax.set_xlim(5, 23)
+        ax.set_xlim(6, 21)
         ax.set_ylim(20, 40)
-        ax.set_xticks(range(5, 24, 2))
-        ax.set_xticklabels([f"{h:02d}:00" for h in range(5, 24, 2)])
+        ax.set_xticks(range(6, 21, 2))
+        ax.set_xticklabels([f"{h:02d}:00" for h in range(6, 21, 2)])
         ax.set_xlabel("Time of day", fontsize=12)
         ax.set_ylabel("Solar diameter [arcminutes]", fontsize=12)
         ax.set_title("Measured solar diameter vs time of day", fontsize=14, pad=12)
