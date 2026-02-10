@@ -10,6 +10,7 @@ import math
 import datetime
 from PIL import Image
 from PIL.ExifTags import TAGS
+from statistics import mean
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -26,19 +27,31 @@ class TimeFixer:
 
     def __initialize__(self):
         # Initialize the TimeFixed instance
-        img_list=["IMG_1448.JPG", "IMG_1449.JPG","IMG_1450.JPG"]
+        img_list=[
+                ("IMG_1448.JPG","7:19:24"),
+                ("IMG_1449.JPG","7:19:37"),
+                ("IMG_1450.JPG","7:19:38")
+        ]
+        deltas=[]
         for img in img_list:
-            exif_data = ExifData(os.path.join("data", "time_ref", img))
-            print(exif_data.date_time)
+            # We don't want to fix time on the ref images!
+            exif_data = ExifData(os.path.join("data", "time_ref", img[0]),fix_time=False)
+            fixed_time = exif_data.date_time.replace(hour=int(img[1].split(":")[0]), 
+                                    minute=int(img[1].split(":")[1]), second=int(img[1].split(":")[2]))
+            deltas.append(exif_data.date_time - fixed_time)
+            print(str(exif_data.date_time - fixed_time)+" "+str(exif_data.date_time)+" "+str(fixed_time))
+        self.delta = datetime.timedelta(seconds=mean(delta.total_seconds() for delta in deltas))
+        #print("Time delta: "+str(self.delta))
 
-    def fix_time(self):
-        # Fix the time
-        pass
+    def fix_time(self, date_time):
+        # return date_time - self.delta
+        return date_time - self.delta
 
 class ExifData:
-    def __init__(self, imgfile):
+    def __init__(self, imgfile,fix_time=True):
         self.imgfile = imgfile
         self.exif_data = None
+        self.fix_time = fix_time
         self.read_exif()
 
     def read_exif(self):
@@ -56,7 +69,7 @@ class ExifData:
         if self.date_time:
             try:
                 self.date_time = datetime.datetime.strptime(self.date_time, "%Y:%m:%d %H:%M:%S")
-                logging.info(f"Date and time: {self.date_time}")
+                logging.info(f"read_exif({self.imgfile}): Date and time: {self.date_time}")
             except ValueError:
                 logging.error(f"Invalid DateTime format in {self.imgfile}")
                 raise
@@ -64,6 +77,9 @@ class ExifData:
             logging.error(f"No DateTime in EXIF for {self.imgfile}")
             sys.exit(1)
 
+        if self.fix_time:
+            time_fixer = TimeFixer()
+            self.date_time = time_fixer.fix_time(self.date_time)
         # Get image size
         self.width, self.height = Image.open(self.imgfile).size
 
@@ -97,7 +113,8 @@ class ExifData:
 
 
 def main():
-    TimeFixer()
+    #TimeFixer()
+    #return
     exif_data = ExifData('data/2025_08_22/2000_sun/IMG_1451.JPG')
     print(exif_data.focal_length)
     print(exif_data.width)
