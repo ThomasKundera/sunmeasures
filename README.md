@@ -22,6 +22,14 @@ A standard photographic Sun filter was used.
 
 Overexposed images (more than 20% of Sun disk image pixels saturated) are rejected from analysis.
 
+## How to use
+
+- git clone the repo
+- run the script: code/bash/run_analysis.sh
+
+It should create apython venev, install what's needed and process the data.
+
+
 ## Data analysis
 
 - Fix time delta with reference images - ✅
