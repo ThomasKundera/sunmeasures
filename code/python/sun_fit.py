@@ -33,7 +33,7 @@ class SunFit:
             logging.error(f"Error: Sun not found in image {self.imgfile}")
             self.valid=False
             return
-        self.radius=angle_mn = 2*self.exif.px_to_mn(r)
+        self.diameter=angle_mn = 2*self.exif.px_to_mn(r)
         #self.plot(img)
 
 
@@ -48,7 +48,7 @@ class SunFit:
         ax2.set_title("Processed")
         ax2.axis('off')
 
-        text = f"Radius: {self.radius:.1f} '"
+        text = f"Diameter: {self.diameter:.1f} '"
         ax2.text(
             x=0.98,                        # 98% from left → near right edge
             y=0.02,                        # 2% from bottom → near bottom
