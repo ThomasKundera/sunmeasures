@@ -2,6 +2,8 @@
 import logging
 import os
 
+from sun_fit import sun_fit
+
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -18,11 +20,20 @@ class Analysis:
         self.imgdir = os.path.join(kPROJECTDIR,'data', kBatch, str(kRSD) + '_sun')
         self.disk_out_dir = os.path.join(kWORKDIR, kBatch, 'disk_out')
         logging.info("disk_out_dir: %s", self.disk_out_dir)
-        #os.makedirs(self.disk_out_dir, exist_ok=True)
+        os.makedirs(self.disk_out_dir, exist_ok=True)
+
+    def for_one_image(self, img):
+        logging.info("Processing image: %s", img)
+        imgfile = os.path.join(self.imgdir, img)
+        sun_fit(imgfile)
+        return
 
     def run(self):
-        pass
-       
+        data=[]
+        idx=0
+        for img in sorted(os.listdir(self.imgdir)):
+            result = self.for_one_image(img)
+
 def main():
     logging.info("main: Start")
     logging.info("kWORKDIR: %s", kWORKDIR)
