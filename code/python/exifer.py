@@ -22,10 +22,10 @@ class TimeFixer:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.__initialize__()
+#            cls._instance.__initialize__()
         return cls._instance
 
-    def __initialize__(self):
+    def initialize(self,workdir):
         # Initialize the TimeFixed instance
         img_list=[
                 ("IMG_1448.JPG","7:19:24"),
@@ -35,7 +35,7 @@ class TimeFixer:
         deltas=[]
         for img in img_list:
             # We don't want to fix time on the ref images!
-            exif_data = ExifData(os.path.join("data", "time_ref", img[0]),fix_time=False)
+            exif_data = ExifData(os.path.join(workdir,"data", "time_ref", img[0]),fix_time=False)
             fixed_time = exif_data.date_time.replace(hour=int(img[1].split(":")[0]), 
                                     minute=int(img[1].split(":")[1]), second=int(img[1].split(":")[2]))
             deltas.append(exif_data.date_time - fixed_time)
