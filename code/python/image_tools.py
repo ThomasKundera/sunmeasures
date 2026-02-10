@@ -6,6 +6,23 @@ import numpy as np
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
+def overexposure_check(image, gray, x, y, r):
+    """Check if >20% of pixels in the Sun disk are overexposed (intensity=255)."""
+    # Create a mask for the Sun disk
+    h, w = gray.shape
+    mask = np.zeros((h, w), dtype=np.uint8)
+    cv2.circle(mask, (int(x), int(y)), int(r), 255, -1)  # Filled circle
+    # Get pixels within the disk
+    disk_pixels = gray[mask == 255]
+    if len(disk_pixels) == 0:
+        return False, 0.0
+    # Count overexposed pixels (intensity=255 for 8-bit grayscale)
+    overexposed_count = np.sum(disk_pixels == 255)
+    overexposed_ratio = overexposed_count / len(disk_pixels)
+    # Return True if >20% are overexposed
+    return overexposed_ratio > 0.2, overexposed_ratio
+
+
 def adjust_contrast(image, saturation_percentile=99):
     """
     Adjust image contrast to ensure ~1% of pixels saturate (255) in at least one channel.
@@ -68,5 +85,11 @@ def find_sun(image,focal_length,min_radius,max_radius):
     if (r is not None):
         cv2.circle(image, (x, y), int(r), (0, 255, 0), 3)  # Green circle
         cv2.circle(image, (x, y), 2, (255, 0, 0), 4)  # Red center
+
+    # Check if overexposed
+    overexposed, overexposed_ratio = overexposure_check(image, gray, x, y, r)
+    if overexposed:
+        logging.info(f"Overexposed ratio: {overexposed_ratio:.2f}")
+        r=None
 
     return image,r
