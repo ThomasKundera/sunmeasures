@@ -2,7 +2,8 @@
 import logging
 import os
 
-from sun_fit import sun_fit
+from exifer import TimeFixer
+from sun_fit import SunFit
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -25,7 +26,8 @@ class Analysis:
     def for_one_image(self, img):
         logging.info("Processing image: %s", img)
         imgfile = os.path.join(self.imgdir, img)
-        sun_fit(imgfile)
+        sun_fit=SunFit(imgfile)
+        sun_fit.run()
         return
 
     def run(self):
@@ -38,6 +40,9 @@ def main():
     logging.info("main: Start")
     logging.info("kWORKDIR: %s", kWORKDIR)
     logging.info("kPROJECTDIR: %s", kPROJECTDIR)
+    # Set up time fixer
+    time_fixer = TimeFixer()
+    time_fixer.initialize(kPROJECTDIR)
     analysis=Analysis()
     analysis.run()
     logging.info("main: End")
