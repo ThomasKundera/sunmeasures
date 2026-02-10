@@ -34,7 +34,7 @@ class SunFit:
             self.valid=False
             return
         self.radius=angle_mn = 2*self.exif.px_to_mn(r)
-        self.plot(img)
+        #self.plot(img)
 
 
     def plot(self, img):
