@@ -3,7 +3,7 @@
 """
 ExifData class to handle EXIF data and timestamps.
 """
-
+import os
 import sys
 import logging
 import math
@@ -14,6 +14,26 @@ from PIL.ExifTags import TAGS
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
+# singleton class for time correction
+class TimeFixer:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.__initialize__()
+        return cls._instance
+
+    def __initialize__(self):
+        # Initialize the TimeFixed instance
+        img_list=["IMG_1448.JPG", "IMG_1449.JPG","IMG_1450.JPG"]
+        for img in img_list:
+            exif_data = ExifData(os.path.join("data", "time_ref", img))
+            print(exif_data.date_time)
+
+    def fix_time(self):
+        # Fix the time
+        pass
 
 class ExifData:
     def __init__(self, imgfile):
@@ -77,6 +97,7 @@ class ExifData:
 
 
 def main():
+    TimeFixer()
     exif_data = ExifData('data/2025_08_22/2000_sun/IMG_1451.JPG')
     print(exif_data.focal_length)
     print(exif_data.width)
