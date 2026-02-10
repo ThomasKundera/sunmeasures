@@ -13,7 +13,11 @@ echo "Working in $WORKDIR"
 cd $WORKDIR
 
 echo "Setting up python environment"
-python3 -m venv runenv
+# Only if runenv does not exist
+if [ ! -d "runenv" ]; then
+    echo "Creating runenv"
+    python3 -m venv runenv
+fi
 source runenv/bin/activate
 
 echo "Installing requirements"
