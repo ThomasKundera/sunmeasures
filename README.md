@@ -1,4 +1,4 @@
-# Sun obrsevtaions and analysis
+# Sun observations and analysis
 
 ## Generalities
 
