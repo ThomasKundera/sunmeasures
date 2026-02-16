@@ -11,7 +11,7 @@ from sun_fit import SunFit
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 kBatch = "2025_08_22"  # Batch date
-kRSD = 2000
+kRSD = 2001
 
 kWORKDIR=os.environ.get('WORKDIR')
 kPROJECTDIR=os.environ.get('PROJECTDIR')
@@ -42,7 +42,7 @@ class Analysis:
             logging.info("Finished image: %s", img)
             return result
         except:
-            logging.info("Error processing image: %s: %s", img, e)
+            logging.info("Error processing image: %s: ", img)
             return None
 
     def run(self):
