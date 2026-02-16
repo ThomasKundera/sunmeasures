@@ -79,7 +79,7 @@ def find_sun(image,focal_length,min_radius,max_radius):
         x, y, r = best_circle
         logging.info(f"Circle found: x={x}, y={y}, r={r}, image shape: {gray.shape}, focal_length={focal_length}mm")
     else:
-        logging.info(f"No circles found in {imgfile}")
+        logging.info(f"No circles found in {image}")
         r=None
     # Draw the circle and center on the original image)
     if (r is not None):
